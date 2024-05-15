@@ -1,0 +1,46 @@
+sudo sysctl -w vm.max_map_count=262144
+
+
+
+docker run \
+    --rm \
+    -e SONAR_HOST_URL="http://sonarqube:9000" \
+    -e SONAR_LOGIN="sqp_363bdadc5fa12c366e718d958abab433a4789995" \
+    -v "./:/usr/src" \
+
+
+docker run \
+--network="sonar-net" \
+--rm \
+-e SONAR_HOST_URL="http://sonarqube:9000" \
+-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=test-project -Dsonar.exclusions=**/*.java -Xmx512m" \
+-e SONAR_TOKEN="sqp_363bdadc5fa12c366e718d958abab433a4789995" \
+-v "./:/usr/src" \
+sonarsource/sonar-scanner-cli
+
+
+docker run \
+--rm \
+-e SONAR_HOST_URL="http://172.17.0.1:9000" \
+-e SONAR_SCANNER_OPTS="-Dsonar.projectKey=test-project -Dsonar.exclusions=**/*.java -Xmx512m" \
+-e SONAR_TOKEN="sqp_363bdadc5fa12c366e718d958abab433a4789995" \
+-v "./:/usr/src" \
+sonarsource/sonar-scanner-cli
+
+
+
+sonar-report \
+  --sonarurl="http://namvh.sonarqube.vn" \
+  --sonarcomponent="soprasteria_sonar-report" \
+  --sonarorganization="sopra-steria" \
+  --project="test-project" \
+  --application="sonar-report" \
+  --release="1.0.0" \
+  --branch="master" \
+  --output="samples/sonar-report_sonar-report.html"
+
+
+  semgrep scan --config auto . --json > report.json
+
+
+  docker run -it -p 0.0.0.0:8081:8080 -p 0.0.0.0:9091:9090 -e WEBGOAT_HOST=webgoat -e WEBWOLF_HOST=webwolf webgoat/webgoat
